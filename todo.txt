@@ -1,0 +1,45 @@
+to create lock list we have to return devices
+loxone
+we have to emulate this
+https://username:password@testminiserver.loxone.com:7777/data/LoxAPP3.json
+caller loops through response.data.controls
+{
+    "otherBoringStuff": "blah",
+    "controls": {
+        "16fef399-00cd-00cf-ffffc581ef707fce": {
+          "name": "Room 1",
+          "type": "NfcCodeTouch",
+        },
+        "16fef399-00d1-00e2-ffffc581ef707fce": {
+          "name": "Room 2",
+          "type": "NfcCodeTouch",
+        }
+    }
+}
+/loxone
+GET /
+
+
+
+nuki
+GET https://api.nuki.io/smartlock
+[
+    {
+        "smartlockId": 545809988,
+        "name": "Room 1",
+        "config": {
+            "keypadPaired": true,
+            "keypad2Paired": false
+        }
+    },
+    {
+        "smartlockId": 3634534634,
+        "name": "Room 2",
+        "config": {
+            "keypadPaired": true,
+            "keypad2Paired": false
+        }
+    }
+]
+
+https://api.nuki.io/account/user/
