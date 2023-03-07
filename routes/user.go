@@ -78,6 +78,21 @@ func UpdateUser(c *fiber.Ctx) error {
 	if err := findUser(id, &user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
-	//TODO: continue here https: //youtu.be/dpx6hpr-wE8?t=2683
 
+	var updateData UpdateUserStruct
+	if err := c.BodyParser(&updateData); err != nil {
+		return c.Status(500).JSON(err.Error())
+	}
+
+	user.FirstName = updateData.FirstName
+	user.LastName = updateData.LastName
+
+	database.Database.Db.Save(&user)
+
+	responseUser := CreateResponseUser(user)
+
+	return c.Status(200).JSON(responseUser)
 }
+
+//TODO continue here
+// https://youtu.be/dpx6hpr-wE8?t=2914
