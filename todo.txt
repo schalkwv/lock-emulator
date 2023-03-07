@@ -1,3 +1,10 @@
+frontend:
+https://htmx.org/
+https://github.com/quii/todo
+https://github.com/donseba/go-htmx
+
+
+
 to create lock list we have to return devices
 loxone
 we have to emulate this
