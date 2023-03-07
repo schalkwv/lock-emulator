@@ -15,6 +15,11 @@ type User struct {
 	LastName  string `json:"last_name"`
 }
 
+type UpdateUserStruct struct {
+	FirstName string `json:"first_name"`
+	LastName  string `json:"last_name"`
+}
+
 func CreateResponseUser(userModel models.User) User {
 	return User{
 		ID:        userModel.ID,
@@ -63,4 +68,16 @@ func GetUser(c *fiber.Ctx) error {
 	}
 	responseUser := CreateResponseUser(user)
 	return c.Status(http.StatusOK).JSON(responseUser)
+}
+func UpdateUser(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(":id should be in integer")
+	}
+	var user models.User
+	if err := findUser(id, &user); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+	//TODO: continue here https: //youtu.be/dpx6hpr-wE8?t=2683
+
 }
