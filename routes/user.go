@@ -20,7 +20,7 @@ type UpdateUserStruct struct {
 	LastName  string `json:"last_name"`
 }
 
-func CreateResponseUser(userModel models.User) User {
+func createResponseUser(userModel models.User) User {
 	return User{
 		ID:        userModel.ID,
 		FirstName: userModel.FirstName,
@@ -34,7 +34,7 @@ func CreateUser(c *fiber.Ctx) error {
 		return c.Status(400).JSON(err.Error())
 	}
 	database.Database.Db.Create(&user)
-	responseUser := CreateResponseUser(user)
+	responseUser := createResponseUser(user)
 	return c.Status(200).JSON(responseUser)
 }
 
@@ -43,7 +43,7 @@ func GetUsers(c *fiber.Ctx) error {
 	database.Database.Db.Find(&users)
 	responseUsers := []User{}
 	for _, user := range users {
-		responseUser := CreateResponseUser(user)
+		responseUser := createResponseUser(user)
 		responseUsers = append(responseUsers, responseUser)
 	}
 	return c.Status(200).JSON(responseUsers)
@@ -66,7 +66,7 @@ func GetUser(c *fiber.Ctx) error {
 	if err := findUser(id, &user); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
 	}
-	responseUser := CreateResponseUser(user)
+	responseUser := createResponseUser(user)
 	return c.Status(http.StatusOK).JSON(responseUser)
 }
 func UpdateUser(c *fiber.Ctx) error {
@@ -89,9 +89,24 @@ func UpdateUser(c *fiber.Ctx) error {
 
 	database.Database.Db.Save(&user)
 
-	responseUser := CreateResponseUser(user)
+	responseUser := createResponseUser(user)
 
 	return c.Status(200).JSON(responseUser)
+}
+
+func DeleteUser(c *fiber.Ctx) error {
+	id, err := c.ParamsInt("id")
+	if err != nil {
+		return c.Status(http.StatusBadRequest).JSON(":id should be in integer")
+	}
+	var user models.User
+	if err := findUser(id, &user); err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(err.Error())
+	}
+	if err := database.Database.Db.Delete(&user).Error; err != nil {
+		return c.Status(fiber.StatusNotFound).JSON(err.Error())
+	}
+	return c.Status(200).SendString("user deleted")
 }
 
 //TODO continue here
